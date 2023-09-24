@@ -3,9 +3,9 @@ services:
     container_name: kbdmarket
     image: postgres
     environment:
-      POSTGRES_USER: theo
-      POSTGRES_PASSWORD: meow-meow
-      PGDATA: /data/postgres
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      PGDATA: ~/${DB_DATABASE}
     volumes:
       - db:/data/postgres
     ports:
