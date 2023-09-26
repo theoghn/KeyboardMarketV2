@@ -1,17 +1,19 @@
-package com.tfluke.KBDMarket;
+package com.tfluke.KBDMarket.controller;
 
-import org.apache.coyote.Response;
+import com.tfluke.KBDMarket.model.Keyboard;
+import com.tfluke.KBDMarket.model.KeyboardFilters;
+import com.tfluke.KBDMarket.model.KeyboardPage;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResourceAccessException;
+import com.tfluke.KBDMarket.service.KeyboardService;
 
-import java.security.Key;
 import java.util.List;
-import java.util.Optional;
 
-@Controller
+@RestController
 @RequestMapping("/api/v1/kbd")
 public class KeyboardController {
 
@@ -20,7 +22,7 @@ public class KeyboardController {
     public KeyboardController(KeyboardService service) {
         this.service = service;
     }
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<List<Keyboard>>getKeyboards(){
         //using response entity to manipulate the Status and not get error when returning empty list
         return  new ResponseEntity<List<Keyboard>>(service.getKeyboards(), HttpStatus.OK);
@@ -31,7 +33,7 @@ public class KeyboardController {
                        Integer imagesGroupId,
                        String description){
 
-    }
+    }*/
     @PostMapping
     public ResponseEntity<Keyboard> addKeyboard(@RequestBody Keyboard newKeyboard){
         service.addKeyboard(newKeyboard);
@@ -58,6 +60,12 @@ public class KeyboardController {
             return new ResponseEntity<String>("Invalid Id",HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<String>("Keyboard with id " + id + " deleted.",HttpStatus.OK);
+    }
+    @GetMapping
+    public ResponseEntity<Page<Keyboard>> getAllKeyboardsWithFilters(KeyboardFilters keyboardFilters,
+                                                                     KeyboardPage keyboardPage){
+        return new ResponseEntity<>(service.getAllKeyboardsByFilter(keyboardFilters, keyboardPage),
+                HttpStatus.OK);
     }
 
 

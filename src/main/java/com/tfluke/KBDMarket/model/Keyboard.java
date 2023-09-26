@@ -1,4 +1,4 @@
-package com.tfluke.KBDMarket;
+package com.tfluke.KBDMarket.model;
 
 import jakarta.persistence.*;
 
@@ -17,8 +17,14 @@ public class Keyboard {
     )
     @Column(name = "kbd_id")
     private Integer id;
+
+
+    private String brand;
+    private String model;
     private String layout;
     private String color;
+    private Integer size;
+    private Boolean led;
     private Integer price;
     private String description;
     /*@OneToMany(cascade = CascadeType.ALL)
@@ -28,12 +34,31 @@ public class Keyboard {
     @ElementCollection
     private List<String> imageLinks;
 
-    public void setLayout(String layout) {
-        this.layout = layout;
+    public String getModel() {
+        return model;
     }
 
-    public List<String> getImageLinks() {
-        return imageLinks;
+    public void setModel(String model) {
+        this.model = model;
+    }
+    public Integer getSize() {
+        return size;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    public Boolean getLed() {
+        return led;
+    }
+
+    public void setLed(Boolean led) {
+        this.led = led;
+    }
+
+    public void setLayout(String layout) {
+        this.layout = layout;
     }
 
     public void setImageLinks(List<String> imagesGroupId) {
@@ -47,7 +72,14 @@ public class Keyboard {
     public void setPrice(Integer price) {
         this.price = price;
     }
+    public void setDescription(String description) { this.description = description; }
 
+    public void setBrand(String brand) { this.brand = brand; }
+    public String getBrand() { return brand; }
+
+    public List<String> getImageLinks() {
+        return imageLinks;
+    }
     public Integer getId() {
         return id;
     }
@@ -56,40 +88,25 @@ public class Keyboard {
         return layout;
     }
 
-    public String getColor() {
-        return color;
-    }
+    public String getColor() { return color; }
 
     public Integer getPrice() {
         return price;
     }
 
-
-
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-
-        this.description = description;
-    }
-
-
-
-    public Keyboard(Integer id, String layout, String color, Integer price, List<String> imageLink, String description) {
-        this.id = id;
-        this.layout = layout;
-        this.color = color;
-        this.price = price;
-        this.imageLinks = imageLink;
-        this.description = description;
-    }
 
     @Override
     public String toString() {
         return "Keyboard\n{\n" +
                 "    \"id\" : " + id +
+                ",\n    \"brand\" : " + brand +
+                ",\n    \"model\" : " + model +
+                ",\n    \"led\" : " + led +
+                ",\n    \"size\" : " + size +
                 ",\n    \"layout\" : " + layout +
                 ",\n    \"color\" : " + color +
                 ",\n    \"price\" : " + price +

@@ -1,18 +1,24 @@
-package com.tfluke.KBDMarket;
+package com.tfluke.KBDMarket.service;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.tfluke.KBDMarket.model.Keyboard;
+import com.tfluke.KBDMarket.model.KeyboardFilters;
+import com.tfluke.KBDMarket.model.KeyboardPage;
+import com.tfluke.KBDMarket.repository.KeyboardCriteriaRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
+import com.tfluke.KBDMarket.repository.KeyboardRepository;
 
-import java.security.Key;
 import java.util.List;
 
 @Service
 public class KeyboardService {
 
     private final KeyboardRepository keyboardRepository;
+    private final KeyboardCriteriaRepository keyboardCriteriaRepository;
 
-    public KeyboardService(KeyboardRepository repo) {
+    public KeyboardService(KeyboardRepository repo,KeyboardCriteriaRepository repo2) {
+        this.keyboardCriteriaRepository = repo2;
         this.keyboardRepository = repo;
     }
 
@@ -36,5 +42,10 @@ public class KeyboardService {
         Keyboard deleteKbd = findKeyboardByID(id);
         keyboardRepository.delete(deleteKbd);
     }
+    public Page<Keyboard> getAllKeyboardsByFilter(KeyboardFilters keyboardFilters,
+                                        KeyboardPage keyboardPage){
+       return keyboardCriteriaRepository.getAllWithFilters(keyboardFilters,keyboardPage);
+    }
+
 
 }

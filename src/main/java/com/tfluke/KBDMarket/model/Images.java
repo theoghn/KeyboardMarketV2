@@ -1,4 +1,4 @@
-package com.tfluke.KBDMarket;
+package com.tfluke.KBDMarket.model;
 
 import jakarta.persistence.*;
 
