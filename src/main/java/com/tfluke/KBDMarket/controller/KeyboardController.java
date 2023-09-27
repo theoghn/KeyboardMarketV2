@@ -1,17 +1,14 @@
 package com.tfluke.KBDMarket.controller;
 
-import com.tfluke.KBDMarket.model.Keyboard;
-import com.tfluke.KBDMarket.model.KeyboardFilters;
-import com.tfluke.KBDMarket.model.KeyboardPage;
+import com.tfluke.KBDMarket.model.*;
 import org.springframework.data.domain.Page;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResourceAccessException;
 import com.tfluke.KBDMarket.service.KeyboardService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/kbd")
@@ -19,8 +16,15 @@ public class KeyboardController {
 
     private final KeyboardService service;
 
-    public KeyboardController(KeyboardService service) {
+    private final KeyboardModelAssembler keyboardModelAssembler;
+
+
+    private final PagedResourcesAssembler<Keyboard> pagedResourcesAssembler;
+
+    public KeyboardController(KeyboardService service, KeyboardModelAssembler keyboardModelAssembler, PagedResourcesAssembler<Keyboard> pagedResourcesAssembler) {
         this.service = service;
+        this.keyboardModelAssembler = keyboardModelAssembler;
+        this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
     /*@GetMapping
     public ResponseEntity<List<Keyboard>>getKeyboards(){
@@ -61,11 +65,19 @@ public class KeyboardController {
         }
         return new ResponseEntity<String>("Keyboard with id " + id + " deleted.",HttpStatus.OK);
     }
+//    @GetMapping
+//    public ResponseEntity<Page<Keyboard>> getAllKeyboardsWithFilters(KeyboardFilters keyboardFilters,
+//                                                                     KeyboardPage keyboardPage){
+//        return new ResponseEntity<>(service.getAllKeyboardsByFilter(keyboardFilters, keyboardPage),
+//                HttpStatus.OK);
+//    }
+
     @GetMapping
-    public ResponseEntity<Page<Keyboard>> getAllKeyboardsWithFilters(KeyboardFilters keyboardFilters,
-                                                                     KeyboardPage keyboardPage){
-        return new ResponseEntity<>(service.getAllKeyboardsByFilter(keyboardFilters, keyboardPage),
-                HttpStatus.OK);
+   public ResponseEntity<PagedModel<KeyboardModel>> getAllKeyboardsWithFilters(KeyboardFilters keyboardFilters,
+                                                                          KeyboardPage keyboardPage){
+        Page<Keyboard> page = service.getAllKeyboardsByFilter(keyboardFilters, keyboardPage);
+      return new ResponseEntity<>(pagedResourcesAssembler.toModel(page, keyboardModelAssembler),
+             HttpStatus.OK);
     }
 
 

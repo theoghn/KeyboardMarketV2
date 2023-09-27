@@ -32,9 +32,10 @@ public class KeyboardCriteriaRepository {
                                             KeyboardPage keyboardPage){
         CriteriaQuery<Keyboard> criteriaQuery =  criteriaBuilder.createQuery(Keyboard.class);
         Root<Keyboard> keyboardRoot =  criteriaQuery.from(Keyboard.class);
+//        keyboardRoot.alias("alias1");
 
         Predicate predicate = buildPredicate(keyboardFilters,keyboardRoot);
-       // long keyboardCount = getKeyboardCount(predicate);
+
         criteriaQuery.where(predicate);
 
 
@@ -43,13 +44,13 @@ public class KeyboardCriteriaRepository {
         TypedQuery<Keyboard> typedQuery = entityManager.createQuery(criteriaQuery);
         typedQuery.setFirstResult(keyboardPage.getPageNumber() * keyboardPage.getPageSize());
         typedQuery.setMaxResults(keyboardPage.getPageSize());
-
+        List<Keyboard> list =  typedQuery.getResultList();
         Pageable pageable=getPageable(keyboardPage);
 
 
-//
+        long keyboardCount = getKeyboardCount(keyboardFilters);
 
-        return new PageImpl<>(typedQuery.getResultList(), pageable, 2);
+        return new PageImpl<>(list, pageable, 2);
 
     }
 
@@ -124,10 +125,12 @@ public class KeyboardCriteriaRepository {
         return PageRequest.of(keyboardPage.getPageNumber(),keyboardPage.getPageSize(), sort);
     }
 
-    private long getKeyboardCount(Predicate predicate) {
+    private long getKeyboardCount(KeyboardFilters keyboardFilters) {
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        countQuery.select(criteriaBuilder.count(countQuery.from(Keyboard.class)));
-        countQuery.where(predicate);
+        Root<Keyboard> countRoot = countQuery.from(Keyboard.class);
+        Predicate pr = buildPredicate(keyboardFilters,countRoot);
+        countQuery.select(criteriaBuilder.count(countRoot));
+        countQuery.where(pr);
 
         return entityManager.createQuery(countQuery).getSingleResult();
     }
