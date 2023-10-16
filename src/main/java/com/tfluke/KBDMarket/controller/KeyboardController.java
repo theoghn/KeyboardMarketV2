@@ -18,7 +18,6 @@ public class KeyboardController {
 
     private final KeyboardModelAssembler keyboardModelAssembler;
 
-
     private final PagedResourcesAssembler<Keyboard> pagedResourcesAssembler;
 
     public KeyboardController(KeyboardService service, KeyboardModelAssembler keyboardModelAssembler, PagedResourcesAssembler<Keyboard> pagedResourcesAssembler) {

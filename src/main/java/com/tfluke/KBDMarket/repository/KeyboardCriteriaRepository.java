@@ -50,7 +50,7 @@ public class KeyboardCriteriaRepository {
 
         long keyboardCount = getKeyboardCount(keyboardFilters);
 
-        return new PageImpl<>(list, pageable, 2);
+        return new PageImpl<>(list, pageable, keyboardCount);
 
     }
 
