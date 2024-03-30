@@ -22,6 +22,14 @@ public class KeyboardModel extends RepresentationModel<KeyboardModel> {
         return brand;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public void setBrand(String brand) {
         this.brand = brand;
     }

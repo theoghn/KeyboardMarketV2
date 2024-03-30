@@ -1,6 +1,7 @@
 package com.tfluke.KBDMarket.controller;
 
 import com.tfluke.KBDMarket.model.*;
+import com.tfluke.KBDMarket.service.AuditService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
@@ -14,14 +15,21 @@ import com.tfluke.KBDMarket.service.KeyboardService;
 @RequestMapping("/api/v1/kbd")
 public class KeyboardController {
 
-    private final KeyboardService service;
+    private final KeyboardService keyboardService;
 
     private final KeyboardModelAssembler keyboardModelAssembler;
 
     private final PagedResourcesAssembler<Keyboard> pagedResourcesAssembler;
 
-    public KeyboardController(KeyboardService service, KeyboardModelAssembler keyboardModelAssembler, PagedResourcesAssembler<Keyboard> pagedResourcesAssembler) {
-        this.service = service;
+    private final AuditService auditService;
+
+    public KeyboardController(
+            KeyboardService keyboardService,
+            KeyboardModelAssembler keyboardModelAssembler,
+            PagedResourcesAssembler<Keyboard> pagedResourcesAssembler,
+            AuditService auditService) {
+        this.auditService = auditService;
+        this.keyboardService = keyboardService;
         this.keyboardModelAssembler = keyboardModelAssembler;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
@@ -39,29 +47,34 @@ public class KeyboardController {
     }*/
     @PostMapping
     public ResponseEntity<Keyboard> addKeyboard(@RequestBody Keyboard newKeyboard){
-        service.addKeyboard(newKeyboard);
+        keyboardService.addKeyboard(newKeyboard);
+        auditService.logAction("Keyboard Post");
         return new ResponseEntity<Keyboard>(newKeyboard,HttpStatus.OK);
 
     }
     @PutMapping("{id}")
     public ResponseEntity<String> updateKeyboard(@PathVariable Integer id,@RequestBody Keyboard kbdDetails){
         try {
-            service.updateKeyboard(id,kbdDetails);
+            keyboardService.updateKeyboard(id,kbdDetails);
         }
         catch (ResourceAccessException e){
             return new ResponseEntity<String>("Invalid Id",HttpStatus.NO_CONTENT);
         }
+        auditService.logAction("Keyboard Update");
+
         return new ResponseEntity<String>(kbdDetails.toString(),HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteKeyboard(@PathVariable Integer id){
         try {
-            service.deleteKeyboard(id);
+            keyboardService.deleteKeyboard(id);
         }
         catch (ResourceAccessException e){
             return new ResponseEntity<String>("Invalid Id",HttpStatus.NO_CONTENT);
         }
+        auditService.logAction("Keyboard Delete");
+
         return new ResponseEntity<String>("Keyboard with id " + id + " deleted.",HttpStatus.OK);
     }
 //    @GetMapping
@@ -72,11 +85,17 @@ public class KeyboardController {
 //    }
 
     @GetMapping
-   public ResponseEntity<PagedModel<KeyboardModel>> getAllKeyboardsWithFilters(KeyboardFilters keyboardFilters,
-                                                                          KeyboardPage keyboardPage){
-        Page<Keyboard> page = service.getAllKeyboardsByFilter(keyboardFilters, keyboardPage);
-      return new ResponseEntity<>(pagedResourcesAssembler.toModel(page, keyboardModelAssembler),
-             HttpStatus.OK);
+   public ResponseEntity<PagedModel<KeyboardModel>> getAllKeyboardsWithFilters(
+           KeyboardFilters keyboardFilters,
+           KeyboardPage keyboardPage){
+
+        auditService.logAction("Keyboard Get");
+
+        Page<Keyboard> page = keyboardService.getAllKeyboardsByFilter(keyboardFilters, keyboardPage);
+
+        return new ResponseEntity<>(
+                pagedResourcesAssembler.toModel(page, keyboardModelAssembler),
+                HttpStatus.OK);
     }
 
 
