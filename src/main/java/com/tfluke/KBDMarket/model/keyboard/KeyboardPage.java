@@ -1,4 +1,4 @@
-package com.tfluke.KBDMarket.model;
+package com.tfluke.KBDMarket.model.keyboard;
 import org.springframework.data.domain.Sort;
 
 public class KeyboardPage {

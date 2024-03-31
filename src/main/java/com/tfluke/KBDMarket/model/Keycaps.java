@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 
 @Entity
 public class Keycaps extends Product{
-    private Integer number;
+    private Integer numberOfKeys;
     private String material;
     private String profile;
     private String productionMethod;
@@ -35,11 +35,11 @@ public class Keycaps extends Product{
     public void setProductionMethod(String productionMethod) {
         this.productionMethod = productionMethod;
     }
-    public Integer getNumber() {
-        return number;
+    public Integer getNumberOfKeys() {
+        return numberOfKeys;
     }
 
-    public void setNumber(Integer number) {
-        this.number = number;
+    public void setNumberOfKeys(Integer number) {
+        this.numberOfKeys = number;
     }
 }

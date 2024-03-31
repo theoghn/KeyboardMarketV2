@@ -1,9 +1,7 @@
-package com.tfluke.KBDMarket.model;
+package com.tfluke.KBDMarket.model.keyboard;
 
 import com.tfluke.KBDMarket.controller.KeyboardController;
 import org.springframework.beans.BeanUtils;
-import org.springframework.hateoas.RepresentationModel;
-import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 

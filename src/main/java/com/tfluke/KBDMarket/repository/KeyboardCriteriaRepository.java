@@ -1,8 +1,8 @@
 package com.tfluke.KBDMarket.repository;
 
-import com.tfluke.KBDMarket.model.Keyboard;
-import com.tfluke.KBDMarket.model.KeyboardFilters;
-import com.tfluke.KBDMarket.model.KeyboardPage;
+import com.tfluke.KBDMarket.model.keyboard.Keyboard;
+import com.tfluke.KBDMarket.model.keyboard.KeyboardFilters;
+import com.tfluke.KBDMarket.model.keyboard.KeyboardPage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -12,9 +12,6 @@ import jakarta.persistence.criteria.Root;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Repository;
 
-import java.lang.reflect.Field;
-import java.security.Key;
-import java.text.Format;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

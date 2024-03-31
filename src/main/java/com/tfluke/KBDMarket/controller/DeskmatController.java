@@ -1,7 +1,6 @@
 package com.tfluke.KBDMarket.controller;
 
 import com.tfluke.KBDMarket.model.Deskmat;
-import com.tfluke.KBDMarket.model.Keyboard;
 import com.tfluke.KBDMarket.service.AuditService;
 import com.tfluke.KBDMarket.service.DeskmatService;
 import org.springframework.http.HttpStatus;

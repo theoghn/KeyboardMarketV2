@@ -9,8 +9,11 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Integer id;
-    private Integer price;
+    private Float price;
+    private String name;
+    @Column(length = 1000)
     private String description;
+
     @ElementCollection
     private List<String> imageLinks;
     public List<String> getImageLinks() {
@@ -32,12 +35,20 @@ public class Product {
     public Product() {
     }
 
-    public Integer getPrice() {
+    public Float getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(Float price) {
         this.price = price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String description) {
+        this.name = description;
     }
 
     public String getDescription() {
@@ -47,9 +58,8 @@ public class Product {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public Product(Integer price, String description) {
+    public Product(Float price, String name) {
         this.price = price;
-        this.description = description;
+        this.name = name;
     }
 }

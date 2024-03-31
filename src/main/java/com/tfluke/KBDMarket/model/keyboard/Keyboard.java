@@ -1,8 +1,8 @@
-package com.tfluke.KBDMarket.model;
+package com.tfluke.KBDMarket.model.keyboard;
 
+import com.tfluke.KBDMarket.model.Product;
 import jakarta.persistence.*;
 
-import java.util.List;
 @Entity
 public class Keyboard extends Product {
 //    @Id
@@ -91,7 +91,7 @@ public class Keyboard extends Product {
                 ",\n    \"color\" : " + color +
                 ",\n    \"price\" : " + getPrice() +
                 ",\n    \"imagesGroupId\" : " + getImageLinks() +
-                ",\n    \"description\" : " + getDescription() +
+                ",\n    \"description\" : " + getName() +
                 "\n}";
     }
 

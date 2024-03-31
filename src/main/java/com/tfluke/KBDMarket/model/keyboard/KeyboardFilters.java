@@ -1,33 +1,17 @@
-package com.tfluke.KBDMarket.model;
+package com.tfluke.KBDMarket.model.keyboard;
 
-import jakarta.persistence.ElementCollection;
-import org.springframework.hateoas.RepresentationModel;
-
-import java.util.List;
-
-public class KeyboardModel extends RepresentationModel<KeyboardModel> {
-    private Integer id;
+public class KeyboardFilters {
     private String brand;
     private String model;
     private String layout;
     private String color;
     private Integer size;
     private Boolean led;
-    private Integer price;
-    private String description;
-    private List<String> imageLinks;
-
+    private Integer maxPrice;
+    private Integer minPrice;
 
     public String getBrand() {
         return brand;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public void setBrand(String brand) {
@@ -74,27 +58,19 @@ public class KeyboardModel extends RepresentationModel<KeyboardModel> {
         this.led = led;
     }
 
-    public Integer getPrice() {
-        return price;
+    public Integer getMaxPrice() {
+        return maxPrice;
     }
 
-    public void setPrice(Integer price) {
-        this.price = price;
+    public void setMaxPrice(Integer maxPrice) {
+        this.maxPrice = maxPrice;
     }
 
-    public String getDescription() {
-        return description;
+    public Integer getMinPrice() {
+        return minPrice;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<String> getImageLinks() {
-        return imageLinks;
-    }
-
-    public void setImageLinks(List<String> imageLinks) {
-        this.imageLinks = imageLinks;
+    public void setMinPrice(Integer minPrice) {
+        this.minPrice = minPrice;
     }
 }

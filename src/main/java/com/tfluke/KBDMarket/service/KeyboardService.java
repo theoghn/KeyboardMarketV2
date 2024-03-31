@@ -1,8 +1,8 @@
 package com.tfluke.KBDMarket.service;
 
-import com.tfluke.KBDMarket.model.Keyboard;
-import com.tfluke.KBDMarket.model.KeyboardFilters;
-import com.tfluke.KBDMarket.model.KeyboardPage;
+import com.tfluke.KBDMarket.model.keyboard.Keyboard;
+import com.tfluke.KBDMarket.model.keyboard.KeyboardFilters;
+import com.tfluke.KBDMarket.model.keyboard.KeyboardPage;
 import com.tfluke.KBDMarket.repository.KeyboardCriteriaRepository;
 import com.tfluke.KBDMarket.utils.NullPropertyFinder;
 import org.springframework.beans.BeanUtils;

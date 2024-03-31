@@ -1,6 +1,6 @@
 package com.tfluke.KBDMarket.controller;
 
-import com.tfluke.KBDMarket.model.*;
+import com.tfluke.KBDMarket.model.keyboard.*;
 import com.tfluke.KBDMarket.service.AuditService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
