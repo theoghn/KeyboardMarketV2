@@ -79,21 +79,21 @@ public class Keyboard extends Product {
     public String getColor() { return color; }
 
 
-//    @Override
-//    public String toString() {
-//        return "Keyboard\n{\n" +
-//                "    \"id\" : " + getId() +
-//                ",\n    \"brand\" : " + brand +
-//                ",\n    \"model\" : " + model +
-//                ",\n    \"led\" : " + led +
-//                ",\n    \"size\" : " + size +
-//                ",\n    \"layout\" : " + layout +
-//                ",\n    \"color\" : " + color +
-//                ",\n    \"price\" : " + getPrice() +
-//                ",\n    \"imagesGroupId\" : " + getImageLinks() +
-//                ",\n    \"description\" : " + getDescription() +
-//                "\n}";
-//    }
+    @Override
+    public String toString() {
+        return "Keyboard\n{\n" +
+                "    \"id\" : " + getId() +
+                ",\n    \"brand\" : " + brand +
+                ",\n    \"model\" : " + model +
+                ",\n    \"led\" : " + led +
+                ",\n    \"size\" : " + size +
+                ",\n    \"layout\" : " + layout +
+                ",\n    \"color\" : " + color +
+                ",\n    \"price\" : " + getPrice() +
+                ",\n    \"imagesGroupId\" : " + getImageLinks() +
+                ",\n    \"description\" : " + getDescription() +
+                "\n}";
+    }
 
     public Keyboard() {
     }

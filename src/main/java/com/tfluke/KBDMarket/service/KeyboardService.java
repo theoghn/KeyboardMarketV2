@@ -4,6 +4,8 @@ import com.tfluke.KBDMarket.model.Keyboard;
 import com.tfluke.KBDMarket.model.KeyboardFilters;
 import com.tfluke.KBDMarket.model.KeyboardPage;
 import com.tfluke.KBDMarket.repository.KeyboardCriteriaRepository;
+import com.tfluke.KBDMarket.utils.NullPropertyFinder;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
@@ -35,7 +37,8 @@ public class KeyboardService {
     }
     public void updateKeyboard(Integer id, Keyboard kbd){
         Keyboard updateKbd = findKeyboardByID(id);
-        updateKbd.setDescription(kbd.getDescription());
+//        updateKbd.setDescription(kbd.getDescription());
+        BeanUtils.copyProperties(kbd, updateKbd, NullPropertyFinder.getNullPropertyNames(kbd));
         keyboardRepository.save(updateKbd);
     }
     public void deleteKeyboard(Integer id){

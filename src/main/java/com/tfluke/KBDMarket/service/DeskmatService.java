@@ -2,6 +2,8 @@ package com.tfluke.KBDMarket.service;
 
 import com.tfluke.KBDMarket.model.Deskmat;
 import com.tfluke.KBDMarket.repository.DeskmatRepository;
+import com.tfluke.KBDMarket.utils.NullPropertyFinder;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
@@ -19,16 +21,17 @@ public class DeskmatService {
         return deskmatRepository.findAll();
     }
 
-    public void addDeskmat(Deskmat kbd){
-        deskmatRepository.save(kbd);
+    public void addDeskmat(Deskmat deskmat){
+        deskmatRepository.save(deskmat);
     }
 
     public Deskmat findDeskmatByID(Integer id){
         return deskmatRepository.findById(id).orElseThrow(()->new ResourceAccessException("Could not find Deskmat with id " + id));
     }
-    public void updateDeskmat(Integer id, Deskmat kbd){
+    public void updateDeskmat(Integer id, Deskmat deskmat){
         Deskmat newDeskmat = findDeskmatByID(id);
-        newDeskmat.setDescription(kbd.getDescription());
+//        copy the properties that are not null
+        BeanUtils.copyProperties(deskmat, newDeskmat, NullPropertyFinder.getNullPropertyNames(deskmat));
         deskmatRepository.save(newDeskmat);
     }
     public void deleteDeskmat(Integer id){
