@@ -11,7 +11,7 @@ import org.springframework.web.client.ResourceAccessException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/switches")
+@RequestMapping("/api/switches")
 public class SwitchesController {
     private final SwitchesService switchesService;
     private final AuditService auditService;
@@ -52,7 +52,7 @@ public class SwitchesController {
         return new ResponseEntity<>("Switches with id " + id + " deleted.", HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/user")
     public ResponseEntity<List<Switches>> getAllSwitches() {
         List<Switches> allSwitches = switchesService.getSwitches();
         auditService.logAction("Switches Get");

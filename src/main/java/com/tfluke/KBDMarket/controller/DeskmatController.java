@@ -5,13 +5,14 @@ import com.tfluke.KBDMarket.service.AuditService;
 import com.tfluke.KBDMarket.service.DeskmatService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/deskmat")
+@RequestMapping("/api/deskmat")
 public class DeskmatController {
     private final DeskmatService deskmatService;
 
@@ -24,14 +25,14 @@ public class DeskmatController {
         this.deskmatService = deskmatService;
     }
 
-    @PostMapping
+    @PostMapping("/admin")
     public ResponseEntity<Deskmat> addDeskmat(@RequestBody Deskmat newDeskmat){
         deskmatService.addDeskmat(newDeskmat);
         auditService.logAction("Deskmat Post");
         return new ResponseEntity<>(newDeskmat, HttpStatus.OK);
 
     }
-    @PutMapping("{id}")
+    @PutMapping("/admin/{id}")
     public ResponseEntity<String> updateDeskmat(@PathVariable Integer id, @RequestBody Deskmat deskmat){
         try {
             deskmatService.updateDeskmat(id,deskmat);
@@ -44,7 +45,7 @@ public class DeskmatController {
         return new ResponseEntity<>(deskmat.toString(),HttpStatus.OK);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/admin/{id}")
     public ResponseEntity<String> deleteDeskmat(@PathVariable Integer id){
         try {
             deskmatService.deleteDeskmat(id);
@@ -57,7 +58,7 @@ public class DeskmatController {
         return new ResponseEntity<String>("Deskmat with id " + id + " deleted.",HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/user")
     public ResponseEntity<List<Deskmat>> getAllDeskmats() {
         List<Deskmat> allDeskmats = deskmatService.getDeskmats();
         auditService.logAction("Deskmat Get");

@@ -2,6 +2,7 @@ package com.tfluke.KBDMarket.model;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -15,12 +16,12 @@ public class Product {
     private String description;
 
     @ElementCollection
-    private List<String> imageLinks;
-    public List<String> getImageLinks() {
+    private Set<String> imageLinks;
+    public Set<String> getImageLinks() {
         return imageLinks;
     }
 
-    public void setImageLinks(List<String> imageLinks) {
+    public void setImageLinks(Set<String> imageLinks) {
         this.imageLinks = imageLinks;
     }
 

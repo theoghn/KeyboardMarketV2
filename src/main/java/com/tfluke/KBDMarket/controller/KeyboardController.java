@@ -12,7 +12,7 @@ import org.springframework.web.client.ResourceAccessException;
 import com.tfluke.KBDMarket.service.KeyboardService;
 
 @RestController
-@RequestMapping("/api/v1/kbd")
+@RequestMapping("/api/kbd")
 public class KeyboardController {
 
     private final KeyboardService keyboardService;
@@ -84,7 +84,7 @@ public class KeyboardController {
 //                HttpStatus.OK);
 //    }
 
-    @GetMapping
+    @GetMapping("/user")
    public ResponseEntity<PagedModel<KeyboardModel>> getAllKeyboardsWithFilters(
            KeyboardFilters keyboardFilters,
            KeyboardPage keyboardPage){

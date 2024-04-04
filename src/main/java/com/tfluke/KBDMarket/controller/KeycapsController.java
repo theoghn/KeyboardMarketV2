@@ -11,7 +11,7 @@ import org.springframework.web.client.ResourceAccessException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/keycaps")
+@RequestMapping("/api/keycaps")
 public class KeycapsController {
     private final KeycapsService keycapsService;
     private final AuditService auditService;
@@ -52,7 +52,7 @@ public class KeycapsController {
         return new ResponseEntity<>("Keycaps with id " + id + " deleted.", HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/user")
     public ResponseEntity<List<Keycaps>> getAllKeycaps() {
         List<Keycaps> allKeycaps = keycapsService.getKeycaps();
         auditService.logAction("Keycaps Get");
