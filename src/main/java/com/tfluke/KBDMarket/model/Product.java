@@ -1,7 +1,6 @@
 package com.tfluke.KBDMarket.model;
 import jakarta.persistence.*;
 
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -12,6 +11,9 @@ public class Product {
     private Integer id;
     private Float price;
     private String name;
+//    this defines the quantity available or the quantity in the cart
+    private Integer quantity;
+
     @Column(length = 1000)
     private String description;
 
@@ -58,6 +60,13 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer stock) {
+        this.quantity = stock;
     }
     public Product(Float price, String name) {
         this.price = price;

@@ -1,6 +1,7 @@
 package com.tfluke.KBDMarket.model.keyboard;
 
 import com.tfluke.KBDMarket.model.Product;
+import com.tfluke.KBDMarket.model.ShoppingCart;
 import jakarta.persistence.*;
 
 @Entity
@@ -17,6 +18,10 @@ public class Keyboard extends Product {
 //    )
 //    @Column(name = "kbd_id")
 //    private Integer id;
+//    @ManyToOne
+//    @JoinColumn(name="cart_id", nullable=false)
+//    private ShoppingCart cart;
+
     private String brand;
     private String model;
     private String layout;
@@ -77,7 +82,13 @@ public class Keyboard extends Product {
     }
 
     public String getColor() { return color; }
-
+//    public ShoppingCart getCart() {
+//        return cart;
+//    }
+//
+//    public void setCart(ShoppingCart cart) {
+//        this.cart = cart;
+//    }
 
     @Override
     public String toString() {

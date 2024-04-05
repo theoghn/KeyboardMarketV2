@@ -45,14 +45,14 @@ public class KeyboardController {
                        String description){
 
     }*/
-    @PostMapping
+    @PostMapping("/admin")
     public ResponseEntity<Keyboard> addKeyboard(@RequestBody Keyboard newKeyboard){
         keyboardService.addKeyboard(newKeyboard);
         auditService.logAction("Keyboard Post");
         return new ResponseEntity<Keyboard>(newKeyboard,HttpStatus.OK);
 
     }
-    @PutMapping("{id}")
+    @PutMapping("/admin/{id}")
     public ResponseEntity<String> updateKeyboard(@PathVariable Integer id,@RequestBody Keyboard kbdDetails){
         try {
             keyboardService.updateKeyboard(id,kbdDetails);
@@ -64,8 +64,20 @@ public class KeyboardController {
 
         return new ResponseEntity<String>(kbdDetails.toString(),HttpStatus.OK);
     }
+    @PutMapping("/admin/{id}/{incomingStock}")
+    public ResponseEntity<String> increaseStock(@PathVariable Integer id, @PathVariable Integer incomingStock){
+        try {
+            keyboardService.increaseStock(id,incomingStock);
+        }
+        catch (ResourceAccessException e){
+            return new ResponseEntity<>("Invalid Id",HttpStatus.NO_CONTENT);
+        }
+        auditService.logAction("Keyboard Stock Increase");
 
-    @DeleteMapping("{id}")
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/admin/{id}")
     public ResponseEntity<String> deleteKeyboard(@PathVariable Integer id){
         try {
             keyboardService.deleteKeyboard(id);
@@ -77,12 +89,6 @@ public class KeyboardController {
 
         return new ResponseEntity<String>("Keyboard with id " + id + " deleted.",HttpStatus.OK);
     }
-//    @GetMapping
-//    public ResponseEntity<Page<Keyboard>> getAllKeyboardsWithFilters(KeyboardFilters keyboardFilters,
-//                                                                     KeyboardPage keyboardPage){
-//        return new ResponseEntity<>(service.getAllKeyboardsByFilter(keyboardFilters, keyboardPage),
-//                HttpStatus.OK);
-//    }
 
     @GetMapping("/user")
    public ResponseEntity<PagedModel<KeyboardModel>> getAllKeyboardsWithFilters(

@@ -40,9 +40,21 @@ public class DeskmatController {
         catch (ResourceAccessException e){
             return new ResponseEntity<>("Invalid Id",HttpStatus.NO_CONTENT);
         }
-        auditService.logAction("Deskmat Put");
+        auditService.logAction("Deskmat Update");
 
         return new ResponseEntity<>(deskmat.toString(),HttpStatus.OK);
+    }
+    @PutMapping("/admin/{id}/{incomingStock}")
+    public ResponseEntity<String> increaseStock(@PathVariable Integer id, @PathVariable Integer incomingStock){
+        try {
+            deskmatService.increaseStock(id,incomingStock);
+        }
+        catch (ResourceAccessException e){
+            return new ResponseEntity<>("Invalid Id",HttpStatus.NO_CONTENT);
+        }
+        auditService.logAction("Deskmat Stock Increase");
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/admin/{id}")

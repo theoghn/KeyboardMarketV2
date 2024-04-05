@@ -1,6 +1,7 @@
 package com.tfluke.KBDMarket.service;
 
 import com.tfluke.KBDMarket.model.Deskmat;
+import com.tfluke.KBDMarket.model.Keycaps;
 import com.tfluke.KBDMarket.repository.DeskmatRepository;
 import com.tfluke.KBDMarket.utils.NullPropertyFinder;
 import org.springframework.beans.BeanUtils;
@@ -38,4 +39,12 @@ public class DeskmatService {
         Deskmat deleteDeskmat = findDeskmatByID(id);
         deskmatRepository.delete(deleteDeskmat);
     }
+    public void increaseStock(Integer id,Integer incomingStock){
+        Deskmat newDeskmat = findDeskmatByID(id);
+        newDeskmat.setQuantity(newDeskmat.getQuantity()+incomingStock);
+        deskmatRepository.save(newDeskmat);
+
+    }
+
+
 }

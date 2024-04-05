@@ -1,5 +1,6 @@
 package com.tfluke.KBDMarket.service;
 
+import com.tfluke.KBDMarket.model.Keycaps;
 import com.tfluke.KBDMarket.model.keyboard.Keyboard;
 import com.tfluke.KBDMarket.model.keyboard.KeyboardFilters;
 import com.tfluke.KBDMarket.model.keyboard.KeyboardPage;
@@ -50,5 +51,10 @@ public class KeyboardService {
        return keyboardCriteriaRepository.getAllWithFilters(keyboardFilters,keyboardPage);
     }
 
+    public void increaseStock(Integer id,Integer incomingStock){
+        Keyboard newKeboard = findKeyboardByID(id);
+        newKeboard.setQuantity(newKeboard.getQuantity()+incomingStock);
+        keyboardRepository.save(newKeboard);
+    }
 
 }

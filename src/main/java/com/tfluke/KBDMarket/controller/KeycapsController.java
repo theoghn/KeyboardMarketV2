@@ -23,25 +23,37 @@ public class KeycapsController {
         this.auditService = auditService;
     }
 
-    @PostMapping
+    @PostMapping("/admin")
     public ResponseEntity<Keycaps> addKeycaps(@RequestBody Keycaps newKeycaps) {
         keycapsService.addKeycaps(newKeycaps);
         auditService.logAction("Keycaps Post");
         return new ResponseEntity<>(newKeycaps, HttpStatus.OK);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/admin/{id}")
     public ResponseEntity<String> updateKeycaps(@PathVariable Integer id, @RequestBody Keycaps keycaps) {
         try {
             keycapsService.updateKeycaps(id, keycaps);
         } catch (ResourceAccessException e) {
             return new ResponseEntity<>("Invalid Id", HttpStatus.NO_CONTENT);
         }
-        auditService.logAction("Keycaps Put");
+        auditService.logAction("Keycaps Update");
         return new ResponseEntity<>(keycaps.toString(), HttpStatus.OK);
     }
+    @PutMapping("/admin/{id}/{incomingStock}")
+    public ResponseEntity<String> increaseStock(@PathVariable Integer id, @PathVariable Integer incomingStock){
+        try {
+            keycapsService.increaseStock(id,incomingStock);
+        }
+        catch (ResourceAccessException e){
+            return new ResponseEntity<>("Invalid Id",HttpStatus.NO_CONTENT);
+        }
+        auditService.logAction("Keycaps Stock Increase");
 
-    @DeleteMapping("{id}")
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/admin/{id}")
     public ResponseEntity<String> deleteKeycaps(@PathVariable Integer id) {
         try {
             keycapsService.deleteKeycaps(id);

@@ -1,5 +1,6 @@
 package com.tfluke.KBDMarket.service;
 
+import com.tfluke.KBDMarket.model.Deskmat;
 import com.tfluke.KBDMarket.model.Switches;
 import com.tfluke.KBDMarket.repository.SwitchesRepository;
 import com.tfluke.KBDMarket.utils.NullPropertyFinder;
@@ -42,4 +43,12 @@ public class SwitchesService {
         Switches deleteSwitches = findSwitchesById(id);
         switchesRepository.delete(deleteSwitches);
     }
+
+    public void increaseStock(Integer id,Integer incomingStock){
+        Switches newSwitches = findSwitchesById(id);
+        newSwitches.setQuantity(newSwitches.getQuantity()+incomingStock);
+        switchesRepository.save(newSwitches);
+
+    }
+
 }

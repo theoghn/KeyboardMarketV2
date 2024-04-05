@@ -1,10 +1,19 @@
 package com.tfluke.KBDMarket.model;
 
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
+
+import java.util.Set;
 
 @Entity
 public class Switches extends Product{
+//    @ManyToMany
+//    @JoinTable(
+//            name = "cart_switches",
+//            joinColumns = @JoinColumn(name = "switches_id"),
+//            inverseJoinColumns = @JoinColumn(name = "cart_id"))
+//    private Set<ShoppingCart> shoppingCarts;
+
     private String type;
 //    in millions of clicks
     private Integer durability;
@@ -66,4 +75,12 @@ public class Switches extends Product{
 
     public Switches() {
     }
+
+//    public Set<ShoppingCart> getShoppingCarts() {
+//        return shoppingCarts;
+//    }
+//
+//    public void setShoppingCarts(Set<ShoppingCart> shoppingCarts) {
+//        this.shoppingCarts = shoppingCarts;
+//    }
 }

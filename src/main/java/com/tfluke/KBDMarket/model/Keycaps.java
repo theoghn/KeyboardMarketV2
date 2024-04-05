@@ -1,9 +1,14 @@
 package com.tfluke.KBDMarket.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Keycaps extends Product{
+//    @ManyToOne
+//    @JoinColumn(name="cart_id", nullable=false)
+//    private ShoppingCart cart;
     private Integer numberOfKeys;
     private String material;
     private String profile;
@@ -42,4 +47,12 @@ public class Keycaps extends Product{
     public void setNumberOfKeys(Integer number) {
         this.numberOfKeys = number;
     }
+
+//    public ShoppingCart getCart() {
+//        return cart;
+//    }
+//
+//    public void setCart(ShoppingCart cart) {
+//        this.cart = cart;
+//    }
 }

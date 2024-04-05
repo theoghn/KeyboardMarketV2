@@ -23,25 +23,38 @@ public class SwitchesController {
         this.auditService = auditService;
     }
 
-    @PostMapping
+    @PostMapping("/admin")
     public ResponseEntity<Switches> addSwitches(@RequestBody Switches newSwitches) {
         switchesService.addSwitches(newSwitches);
         auditService.logAction("Switches Post");
         return new ResponseEntity<>(newSwitches, HttpStatus.OK);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/admin/{id}")
     public ResponseEntity<String> updateSwitches(@PathVariable Integer id, @RequestBody Switches switches) {
         try {
             switchesService.updateSwitches(id, switches);
         } catch (ResourceAccessException e) {
             return new ResponseEntity<>("Invalid Id", HttpStatus.NO_CONTENT);
         }
-        auditService.logAction("Switches Put");
+        auditService.logAction("Switches Update");
         return new ResponseEntity<>(switches.toString(), HttpStatus.OK);
     }
 
-    @DeleteMapping("{id}")
+    @PutMapping("/admin/{id}/{incomingStock}")
+    public ResponseEntity<String> increaseStock(@PathVariable Integer id, @PathVariable Integer incomingStock){
+        try {
+            switchesService.increaseStock(id,incomingStock);
+        }
+        catch (ResourceAccessException e){
+            return new ResponseEntity<>("Invalid Id",HttpStatus.NO_CONTENT);
+        }
+        auditService.logAction("Switches Stock Increase");
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/admin/{id}")
     public ResponseEntity<String> deleteSwitches(@PathVariable Integer id) {
         try {
             switchesService.deleteSwitches(id);

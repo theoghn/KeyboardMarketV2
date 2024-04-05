@@ -41,4 +41,12 @@ public class KeycapsService {
         Keycaps deleteKeycaps = findKeycapsById(id);
         keycapsRepository.delete(deleteKeycaps);
     }
+
+    public void increaseStock(Integer id,Integer incomingStock){
+        Keycaps newKeycaps = findKeycapsById(id);
+        newKeycaps.setQuantity(newKeycaps.getQuantity()+incomingStock);
+        keycapsRepository.save(newKeycaps);
+
+    }
+
 }
