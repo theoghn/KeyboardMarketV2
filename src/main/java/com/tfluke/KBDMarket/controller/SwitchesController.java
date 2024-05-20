@@ -24,32 +24,35 @@ public class SwitchesController {
     }
 
     @PostMapping("/admin")
-    public ResponseEntity<Switches> addSwitches(@RequestBody Switches newSwitches) {
-        switchesService.addSwitches(newSwitches);
-        auditService.logAction("Switches Post");
+    public ResponseEntity<?> addSwitches(@RequestBody Switches newSwitches) {
+        try {
+            switchesService.addSwitches(newSwitches);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.OK);
+        }
+        auditService.logAction("Switches Added");
         return new ResponseEntity<>(newSwitches, HttpStatus.OK);
     }
 
     @PutMapping("/admin/{id}")
-    public ResponseEntity<String> updateSwitches(@PathVariable Integer id, @RequestBody Switches switches) {
+    public ResponseEntity<?> updateSwitches(@PathVariable Integer id, @RequestBody Switches switches) {
         try {
             switchesService.updateSwitches(id, switches);
         } catch (ResourceAccessException e) {
             return new ResponseEntity<>("Invalid Id", HttpStatus.NO_CONTENT);
         }
-        auditService.logAction("Switches Update");
-        return new ResponseEntity<>(switches.toString(), HttpStatus.OK);
+        auditService.logAction("Switches "+id+" Update");
+        return ResponseEntity.ok(switches);
     }
 
     @PutMapping("/admin/{id}/{incomingStock}")
-    public ResponseEntity<String> increaseStock(@PathVariable Integer id, @PathVariable Integer incomingStock){
+    public ResponseEntity<String> increaseStock(@PathVariable Integer id, @PathVariable Integer incomingStock) {
         try {
-            switchesService.increaseStock(id,incomingStock);
+            switchesService.increaseStock(id, incomingStock);
+        } catch (ResourceAccessException e) {
+            return new ResponseEntity<>("Invalid Id", HttpStatus.NO_CONTENT);
         }
-        catch (ResourceAccessException e){
-            return new ResponseEntity<>("Invalid Id",HttpStatus.NO_CONTENT);
-        }
-        auditService.logAction("Switches Stock Increase");
+        auditService.logAction("Switches "+id+" Stock Increase");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -68,7 +71,7 @@ public class SwitchesController {
     @GetMapping("/user")
     public ResponseEntity<List<Switches>> getAllSwitches() {
         List<Switches> allSwitches = switchesService.getSwitches();
-        auditService.logAction("Switches Get");
+        auditService.logAction("Switches accessed");
         return ResponseEntity.ok(allSwitches);
     }
 }

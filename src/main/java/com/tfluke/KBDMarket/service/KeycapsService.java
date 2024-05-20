@@ -23,6 +23,9 @@ public class KeycapsService {
     }
 
     public void addKeycaps(Keycaps keycaps) {
+        if (keycaps == null || keycaps.getQuantity() == null) {
+            throw new IllegalArgumentException("One or more not nullable variables are null.");
+        }
         keycapsRepository.save(keycaps);
     }
 

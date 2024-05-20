@@ -1,16 +1,15 @@
 package com.tfluke.KBDMarket.service;
 
 import org.springframework.stereotype.Service;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-
-//lombok
 @Service
 public class AuditService {
     private static final Logger logger = LoggerFactory.getLogger(AuditService.class);

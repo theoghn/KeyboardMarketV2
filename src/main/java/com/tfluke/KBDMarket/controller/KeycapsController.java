@@ -24,31 +24,35 @@ public class KeycapsController {
     }
 
     @PostMapping("/admin")
-    public ResponseEntity<Keycaps> addKeycaps(@RequestBody Keycaps newKeycaps) {
-        keycapsService.addKeycaps(newKeycaps);
-        auditService.logAction("Keycaps Post");
+    public ResponseEntity<?> addKeycaps(@RequestBody Keycaps newKeycaps) {
+        try {
+            keycapsService.addKeycaps(newKeycaps);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.OK);
+        }
+        auditService.logAction("Keycaps Added");
         return new ResponseEntity<>(newKeycaps, HttpStatus.OK);
     }
 
     @PutMapping("/admin/{id}")
-    public ResponseEntity<String> updateKeycaps(@PathVariable Integer id, @RequestBody Keycaps keycaps) {
+    public ResponseEntity<?> updateKeycaps(@PathVariable Integer id, @RequestBody Keycaps keycaps) {
         try {
             keycapsService.updateKeycaps(id, keycaps);
         } catch (ResourceAccessException e) {
             return new ResponseEntity<>("Invalid Id", HttpStatus.NO_CONTENT);
         }
-        auditService.logAction("Keycaps Update");
-        return new ResponseEntity<>(keycaps.toString(), HttpStatus.OK);
+        auditService.logAction("Keycaps "+id+"  Update");
+        return new ResponseEntity<>(keycaps, HttpStatus.OK);
     }
+
     @PutMapping("/admin/{id}/{incomingStock}")
-    public ResponseEntity<String> increaseStock(@PathVariable Integer id, @PathVariable Integer incomingStock){
+    public ResponseEntity<String> increaseStock(@PathVariable Integer id, @PathVariable Integer incomingStock) {
         try {
-            keycapsService.increaseStock(id,incomingStock);
+            keycapsService.increaseStock(id, incomingStock);
+        } catch (ResourceAccessException e) {
+            return new ResponseEntity<>("Invalid Id", HttpStatus.NO_CONTENT);
         }
-        catch (ResourceAccessException e){
-            return new ResponseEntity<>("Invalid Id",HttpStatus.NO_CONTENT);
-        }
-        auditService.logAction("Keycaps Stock Increase");
+        auditService.logAction("Keycaps "+id+"  Stock Increase");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -67,7 +71,7 @@ public class KeycapsController {
     @GetMapping("/user")
     public ResponseEntity<List<Keycaps>> getAllKeycaps() {
         List<Keycaps> allKeycaps = keycapsService.getKeycaps();
-        auditService.logAction("Keycaps Get");
+        auditService.logAction("Keycaps accessed");
         return ResponseEntity.ok(allKeycaps);
     }
 }

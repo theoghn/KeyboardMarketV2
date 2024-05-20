@@ -1,15 +1,14 @@
 package com.tfluke.KBDMarket.controller;
 
-import com.tfluke.KBDMarket.model.keyboard.*;
+import com.tfluke.KBDMarket.model.Keyboard;
 import com.tfluke.KBDMarket.service.AuditService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResourceAccessException;
 import com.tfluke.KBDMarket.service.KeyboardService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/kbd")
@@ -17,91 +16,71 @@ public class KeyboardController {
 
     private final KeyboardService keyboardService;
 
-    private final KeyboardModelAssembler keyboardModelAssembler;
-
-    private final PagedResourcesAssembler<Keyboard> pagedResourcesAssembler;
-
     private final AuditService auditService;
 
     public KeyboardController(
             KeyboardService keyboardService,
-            KeyboardModelAssembler keyboardModelAssembler,
-            PagedResourcesAssembler<Keyboard> pagedResourcesAssembler,
             AuditService auditService) {
         this.auditService = auditService;
         this.keyboardService = keyboardService;
-        this.keyboardModelAssembler = keyboardModelAssembler;
-        this.pagedResourcesAssembler = pagedResourcesAssembler;
-    }
-    /*@GetMapping
-    public ResponseEntity<List<Keyboard>>getKeyboards(){
-        //using response entity to manipulate the Status and not get error when returning empty list
-        return  new ResponseEntity<List<Keyboard>>(service.getKeyboards(), HttpStatus.OK);
-    }
-    record NewKeyboard(String layout,
-                       String color,
-                       Integer price,
-                       Integer imagesGroupId,
-                       String description){
 
-    }*/
+    }
+
     @PostMapping("/admin")
-    public ResponseEntity<Keyboard> addKeyboard(@RequestBody Keyboard newKeyboard){
-        keyboardService.addKeyboard(newKeyboard);
-        auditService.logAction("Keyboard Post");
-        return new ResponseEntity<Keyboard>(newKeyboard,HttpStatus.OK);
+    public ResponseEntity<?> addKeyboard(@RequestBody Keyboard newKeyboard) {
+        try {
+            keyboardService.addKeyboard(newKeyboard);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.OK);
+        }
+        auditService.logAction("Keyboard Added");
+        return new ResponseEntity<Keyboard>(newKeyboard, HttpStatus.OK);
 
     }
+
     @PutMapping("/admin/{id}")
-    public ResponseEntity<String> updateKeyboard(@PathVariable Integer id,@RequestBody Keyboard kbdDetails){
+    public ResponseEntity<?> updateKeyboard(@PathVariable Integer id, @RequestBody Keyboard kbdDetails) {
         try {
-            keyboardService.updateKeyboard(id,kbdDetails);
+            keyboardService.updateKeyboard(id, kbdDetails);
+        } catch (ResourceAccessException e) {
+            return new ResponseEntity<>("Invalid Id", HttpStatus.NO_CONTENT);
         }
-        catch (ResourceAccessException e){
-            return new ResponseEntity<String>("Invalid Id",HttpStatus.NO_CONTENT);
-        }
-        auditService.logAction("Keyboard Update");
+        auditService.logAction("Keyboard "+id+" Update");
 
-        return new ResponseEntity<String>(kbdDetails.toString(),HttpStatus.OK);
+        return new ResponseEntity<>(kbdDetails, HttpStatus.OK);
     }
+
     @PutMapping("/admin/{id}/{incomingStock}")
-    public ResponseEntity<String> increaseStock(@PathVariable Integer id, @PathVariable Integer incomingStock){
+    public ResponseEntity<String> increaseStock(@PathVariable Integer id, @PathVariable Integer incomingStock) {
         try {
-            keyboardService.increaseStock(id,incomingStock);
+            keyboardService.increaseStock(id, incomingStock);
+        } catch (ResourceAccessException e) {
+            return new ResponseEntity<>("Invalid Id", HttpStatus.NO_CONTENT);
         }
-        catch (ResourceAccessException e){
-            return new ResponseEntity<>("Invalid Id",HttpStatus.NO_CONTENT);
-        }
-        auditService.logAction("Keyboard Stock Increase");
+        auditService.logAction("Keyboard "+id+" Stock Increase");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/admin/{id}")
-    public ResponseEntity<String> deleteKeyboard(@PathVariable Integer id){
+    public ResponseEntity<String> deleteKeyboard(@PathVariable Integer id) {
         try {
             keyboardService.deleteKeyboard(id);
+        } catch (ResourceAccessException e) {
+            return new ResponseEntity<String>("Invalid Id", HttpStatus.NO_CONTENT);
         }
-        catch (ResourceAccessException e){
-            return new ResponseEntity<String>("Invalid Id",HttpStatus.NO_CONTENT);
-        }
-        auditService.logAction("Keyboard Delete");
+        auditService.logAction("Keyboard "+id+" Deleted");
 
-        return new ResponseEntity<String>("Keyboard with id " + id + " deleted.",HttpStatus.OK);
+        return new ResponseEntity<String>("Keyboard with id " + id + " deleted.", HttpStatus.OK);
     }
 
     @GetMapping("/user")
-   public ResponseEntity<PagedModel<KeyboardModel>> getAllKeyboardsWithFilters(
-           KeyboardFilters keyboardFilters,
-           KeyboardPage keyboardPage){
+    public ResponseEntity<List<Keyboard>> getAllKeyboards() {
 
-        auditService.logAction("Keyboard Get");
+        List<Keyboard> allKeyboards = keyboardService.getKeyboards();
+        auditService.logAction("Keyboard accessed");
 
-        Page<Keyboard> page = keyboardService.getAllKeyboardsByFilter(keyboardFilters, keyboardPage);
-
-        return new ResponseEntity<>(
-                pagedResourcesAssembler.toModel(page, keyboardModelAssembler),
-                HttpStatus.OK);
+        return ResponseEntity.ok(allKeyboards);
     }
 
 

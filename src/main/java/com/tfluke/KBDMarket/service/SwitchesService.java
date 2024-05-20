@@ -1,6 +1,5 @@
 package com.tfluke.KBDMarket.service;
 
-import com.tfluke.KBDMarket.model.Deskmat;
 import com.tfluke.KBDMarket.model.Switches;
 import com.tfluke.KBDMarket.repository.SwitchesRepository;
 import com.tfluke.KBDMarket.utils.NullPropertyFinder;
@@ -25,6 +24,9 @@ public class SwitchesService {
     }
 
     public void addSwitches(Switches switches) {
+        if (switches == null || switches.getQuantity() == null) {
+            throw new IllegalArgumentException("One or more not nullable variables are null.");
+        }
         switchesRepository.save(switches);
     }
 

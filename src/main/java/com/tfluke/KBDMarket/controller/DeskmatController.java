@@ -5,7 +5,6 @@ import com.tfluke.KBDMarket.service.AuditService;
 import com.tfluke.KBDMarket.service.DeskmatService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResourceAccessException;
 
@@ -26,54 +25,57 @@ public class DeskmatController {
     }
 
     @PostMapping("/admin")
-    public ResponseEntity<Deskmat> addDeskmat(@RequestBody Deskmat newDeskmat){
-        deskmatService.addDeskmat(newDeskmat);
-        auditService.logAction("Deskmat Post");
+    public ResponseEntity<?> addDeskmat(@RequestBody Deskmat newDeskmat) {
+        try {
+            deskmatService.addDeskmat(newDeskmat);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.OK);
+        }
+        auditService.logAction("Deskmat Added");
         return new ResponseEntity<>(newDeskmat, HttpStatus.OK);
 
     }
-    @PutMapping("/admin/{id}")
-    public ResponseEntity<String> updateDeskmat(@PathVariable Integer id, @RequestBody Deskmat deskmat){
-        try {
-            deskmatService.updateDeskmat(id,deskmat);
-        }
-        catch (ResourceAccessException e){
-            return new ResponseEntity<>("Invalid Id",HttpStatus.NO_CONTENT);
-        }
-        auditService.logAction("Deskmat Update");
 
-        return new ResponseEntity<>(deskmat.toString(),HttpStatus.OK);
-    }
-    @PutMapping("/admin/{id}/{incomingStock}")
-    public ResponseEntity<String> increaseStock(@PathVariable Integer id, @PathVariable Integer incomingStock){
+    @PutMapping("/admin/{id}")
+    public ResponseEntity<?> updateDeskmat(@PathVariable Integer id, @RequestBody Deskmat deskmat) {
         try {
-            deskmatService.increaseStock(id,incomingStock);
+            deskmatService.updateDeskmat(id, deskmat);
+        } catch (ResourceAccessException e) {
+            return new ResponseEntity<>("Invalid Id", HttpStatus.NO_CONTENT);
         }
-        catch (ResourceAccessException e){
-            return new ResponseEntity<>("Invalid Id",HttpStatus.NO_CONTENT);
+        auditService.logAction("Deskmat "+id+" Update");
+
+        return new ResponseEntity<>(deskmat, HttpStatus.OK);
+    }
+
+    @PutMapping("/admin/{id}/{incomingStock}")
+    public ResponseEntity<String> increaseStock(@PathVariable Integer id, @PathVariable Integer incomingStock) {
+        try {
+            deskmatService.increaseStock(id, incomingStock);
+        } catch (ResourceAccessException e) {
+            return new ResponseEntity<>("Invalid Id", HttpStatus.NO_CONTENT);
         }
-        auditService.logAction("Deskmat Stock Increase");
+        auditService.logAction("Deskmat "+id+" Stock Increase");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/admin/{id}")
-    public ResponseEntity<String> deleteDeskmat(@PathVariable Integer id){
+    public ResponseEntity<String> deleteDeskmat(@PathVariable Integer id) {
         try {
             deskmatService.deleteDeskmat(id);
+        } catch (ResourceAccessException e) {
+            return new ResponseEntity<String>("Invalid Id", HttpStatus.NO_CONTENT);
         }
-        catch (ResourceAccessException e){
-            return new ResponseEntity<String>("Invalid Id",HttpStatus.NO_CONTENT);
-        }
-        auditService.logAction("Deskmat Delete");
+        auditService.logAction("Deskmat "+id+" Deleted");
 
-        return new ResponseEntity<String>("Deskmat with id " + id + " deleted.",HttpStatus.OK);
+        return new ResponseEntity<String>("Deskmat with id " + id + " deleted.", HttpStatus.OK);
     }
 
     @GetMapping("/user")
     public ResponseEntity<List<Deskmat>> getAllDeskmats() {
         List<Deskmat> allDeskmats = deskmatService.getDeskmats();
-        auditService.logAction("Deskmat Get");
+        auditService.logAction("Deskmat accessed");
 
         return ResponseEntity.ok(allDeskmats);
     }

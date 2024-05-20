@@ -1,7 +1,6 @@
 package com.tfluke.KBDMarket.service;
 
 import com.tfluke.KBDMarket.model.Deskmat;
-import com.tfluke.KBDMarket.model.Keycaps;
 import com.tfluke.KBDMarket.repository.DeskmatRepository;
 import com.tfluke.KBDMarket.utils.NullPropertyFinder;
 import org.springframework.beans.BeanUtils;
@@ -23,6 +22,9 @@ public class DeskmatService {
     }
 
     public void addDeskmat(Deskmat deskmat){
+        if (deskmat == null || deskmat.getQuantity() == null) {
+            throw new IllegalArgumentException("One or more not nullable variables are null.");
+        }
         deskmatRepository.save(deskmat);
     }
 

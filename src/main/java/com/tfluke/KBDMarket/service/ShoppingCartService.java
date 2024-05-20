@@ -1,67 +1,72 @@
 package com.tfluke.KBDMarket.service;
-
-import com.tfluke.KBDMarket.model.Keycaps;
-import com.tfluke.KBDMarket.model.ShoppingCart;
-import com.tfluke.KBDMarket.repository.KeycapsRepository;
-import com.tfluke.KBDMarket.repository.ShoppingCartRepository;
-import org.springframework.beans.BeanUtils;
+import com.tfluke.KBDMarket.exception.NotEnoughProductsInStockException;
+import com.tfluke.KBDMarket.model.Product;
+import com.tfluke.KBDMarket.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
-
-import static com.tfluke.KBDMarket.utils.NullPropertyFinder.getNullPropertyNames;
-
-// not fully implemented
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
+@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Transactional
 public class ShoppingCartService {
 
-    private final ShoppingCartRepository shoppingCartRepository;
-    private final DeskmatService deskmatService;
-    private final KeycapsService keycapsService;
-    private final SwitchesService switchesService;
-    private final KeyboardService keyboardService;
+    private final ProductRepository productRepository;
+
+    private final Map<Product, Integer> products = new HashMap<>();
+
     @Autowired
-    public ShoppingCartService(
-            ShoppingCartRepository shoppingCartRepository,
-            DeskmatService deskmatService,
-            KeycapsService keycapsService,
-            SwitchesService switchesService,
-            KeyboardService keyboardService) {
-        this.shoppingCartRepository = shoppingCartRepository;
-        this.deskmatService = deskmatService;
-        this.keycapsService = keycapsService;
-        this.switchesService = switchesService;
-        this.keyboardService = keyboardService;
+    public ShoppingCartService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
-    public List<ShoppingCart> getShoppingCarts() {
-        return shoppingCartRepository.findAll();
+    public void addProduct(Product product) {
+        if (products.containsKey(product)) {
+            products.replace(product, products.get(product) + 1);
+        } else {
+            products.put(product, 1);
+        }
     }
 
-    public void addShoppingCart(ShoppingCart shoppingCart) {
-        shoppingCartRepository.save(shoppingCart);
+    public void removeProduct(Product product) {
+        if (products.containsKey(product)) {
+            if (products.get(product) > 1)
+                products.replace(product, products.get(product) - 1);
+            else if (products.get(product) == 1) {
+                products.remove(product);
+            }
+        }
     }
 
-    public ShoppingCart findShoppingCartById(Integer id) {
-        return shoppingCartRepository.findById(id)
-                .orElseThrow(() -> new ResourceAccessException("Could not find ShoppingCart with id " + id));
+    public Map<Product, Integer> getProductsInCart() {
+        return Collections.unmodifiableMap(products);
     }
 
-    public void updateShoppingCart(Integer id, ShoppingCart shoppingCart) {
-        ShoppingCart existingShoppingCart = findShoppingCartById(id);
-        BeanUtils.copyProperties(shoppingCart, existingShoppingCart, getNullPropertyNames(shoppingCart));
-        shoppingCartRepository.save(existingShoppingCart);
+    public void checkout() throws NotEnoughProductsInStockException {
+        for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+            // Refresh quantity for every product before checking
+            Product product = productRepository.findById(entry.getKey().getId()).orElseThrow(() -> new ResourceAccessException("Could not find Product with id "));
+            if (product.getQuantity() < entry.getValue())
+                throw new NotEnoughProductsInStockException(product);
+            entry.getKey().setQuantity(product.getQuantity() - entry.getValue());
+        }
+        productRepository.saveAll(products.keySet());
+        productRepository.flush();
+        products.clear();
     }
-    public void addDeskmatToCart(Integer deskmatId){
 
+
+    public Integer getTotal() {
+        return products.entrySet().stream()
+                .mapToInt(entry -> (int) (entry.getKey().getPrice() * entry.getValue()))
+                .sum();
     }
-
-    public void deleteShoppingCart(Integer id) {
-        ShoppingCart shoppingCartToDelete = findShoppingCartById(id);
-        shoppingCartRepository.delete(shoppingCartToDelete);
-    }
-
 }

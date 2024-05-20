@@ -3,26 +3,19 @@ package com.tfluke.KBDMarket.model;
 
 import jakarta.persistence.*;
 
-import java.util.Set;
 
 @Entity
-public class Switches extends Product{
-//    @ManyToMany
-//    @JoinTable(
-//            name = "cart_switches",
-//            joinColumns = @JoinColumn(name = "switches_id"),
-//            inverseJoinColumns = @JoinColumn(name = "cart_id"))
-//    private Set<ShoppingCart> shoppingCarts;
+public class Switches extends Product {
 
     private String type;
-//    in millions of clicks
+    //    in millions of clicks
     private Integer durability;
     private Boolean lubed;
-//    x+-y gf
+    //    x+-y gf
     private String operationForce;
-//    ex:Pre-travel: 2.0±0.2 mm
+    //    ex:Pre-travel: 2.0±0.2 mm
     private String preTravel;
-//    ex:Total Travel: 3.6±0.2 mm
+    //    ex:Total Travel: 3.6±0.2 mm
     private String totalTravel;
 
     public String getType() {
@@ -76,11 +69,19 @@ public class Switches extends Product{
     public Switches() {
     }
 
-//    public Set<ShoppingCart> getShoppingCarts() {
-//        return shoppingCarts;
-//    }
-//
-//    public void setShoppingCarts(Set<ShoppingCart> shoppingCarts) {
-//        this.shoppingCarts = shoppingCarts;
-//    }
+    @Override
+    public String toString() {
+        return "Switches\n{\n" +
+                "    \"id\" : " + getId() +
+                ",\n    \"price\" : " + getPrice() +
+                ",\n    \"imagesGroupId\" : " + getImageLinks() +
+                ",\n    \"description\" : " + getName() +
+                ",\n    \"type\" : " + type +
+                ",\n    \"durability\" : " + durability +
+                ",\n    \"lubed\" : " + lubed +
+                ",\n    \"operationForce\" : " + operationForce +
+                ",\n    \"preTravel\" : " + preTravel +
+                ",\n    \"totalTravel\" : " + totalTravel +
+                "\n}";
+    }
 }
