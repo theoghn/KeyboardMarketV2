@@ -1,4 +1,4 @@
-package com.tfluke.KBDMarket;
+package com.tfluke.KBDMarket.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
